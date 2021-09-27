@@ -1,21 +1,21 @@
 ticket = int(input('Введите номер билета: '))
 
-ld = ticket // 1000
-rd = ticket % 1000
+left_data = ticket // 1000
+right_data = ticket % 1000
 
-ld1 = ld // 100
-ld2 = ld % 100 //10
-ld3 = ld % 10
-ls = ld1 + ld2 +ld3
-ls = ld1 + ld2 +ld3
+left_data1 = left_data // 100
+left_data2 = left_data % 100 //10
+left_data3 = left_data % 10
+leftt_summ = left_data1 + left_data2 +left_data3
+leftt_summ = left_data1 + left_data2 +left_data3
 
-rd1 = rd // 100
-rd2 = rd % 100 //10
-rd3 = rd % 10
-rs = rd1 + rd2 +rd3
+right_data1 = right_data // 100
+right_data2 = right_data % 100 //10
+right_data3 = right_data % 10
+right_summ = right_data1 + right_data2 +right_data3
 
-if ls == rs:
+if leftt_summ == right_summ:
     print('Билет', ticket, 'счастливый')
 
-else:
+eleftt_summe:
     print('Билет', ticket, 'Несчастливый')
