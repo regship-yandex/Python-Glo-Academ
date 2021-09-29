@@ -1,11 +1,11 @@
-num = int(input('Сколько чисел ввести?: '))
-
-nummin, nummax = num, num
-for i in range(num):
+n = int(input())
+minimum = n
+maximum = 0
+for i in range(n):
     number = int(input())
-    if number > nummax:
-        nummax = number
-    elif number < nummin:
-        nummin = number
-print('Максимум равен: ', nummax)
-print('Минимум равен: ', nummin)
+    if number < minimum:
+        minimum = number
+    if number > maximum:
+        maximum = number
+print('Минимум равен', minimum)
+print('Максимум равен', maximum)
