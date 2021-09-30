@@ -1,7 +1,8 @@
 n = int(input())
-minimum = n
-maximum = 0
-for i in range(n):
+number = int(input())
+minimum = number
+maximum = number
+for i in range(n-1):
     number = int(input())
     if number < minimum:
         minimum = number
