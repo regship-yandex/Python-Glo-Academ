@@ -19,7 +19,6 @@ def sold_out ():
     secret_number = 0
     max = 100
     while True:
-        #print('Хотите продолжить? Введите [y]или[n]')
         print('Начать Игру? Введите [y]или[n]')
         answer = input()
         if not (answer == 'y' or answer == 'н'):
@@ -27,7 +26,6 @@ def sold_out ():
 
         max = int(input("max правую границу "))
         secret_number = randint(1, max)
-        # print('я загодал число от 1 до ', max ,"по секрету " , secret_number)
         print('я загодал число от 1 до', max)
         main_function(secret_number, max)
     print('Пока пока...')
@@ -53,7 +51,5 @@ def main_function(secret_number, max):
             break
 
 
-#secrert_number = randint(1, 100)
 print('Добро пожаловать в игру "Угадай число"')
 sold_out ()
-#main_function(secrert_number, total)
