@@ -1,19 +1,23 @@
 import os.path
 import jsonpickle
 
-class Shcool_data:
 
-    def __init__(self):
-        self.students = []
-        self.name_shcool = "Нет информации"
-        self.adress_shcool = "Нет информации"
+class Shcool:
 
-    def get_list(self):
-        return self.students
+    def __init__(self, name, adress, student=None):
+        if student is None:
+            student = []
+        self.students = student
+        self.name_shcool = name
+        self.adress_shcool = adress
 
-    def get_count_students(self):
-        return len(self.students)
 
+#
+#     def get_list(self):
+#         return self.students
+#
+#     def get_count_students(self):
+#         return len(self.students)
 
 class Student:
     """анкетные данные ученика"""
@@ -31,15 +35,24 @@ class Shcool_Manager:
     def __init__(self):
         self.path_file = 'file_name.json'
         self.file_manager = FileManager()
+        self.students = []
+        self.name_shcool = "Нет информации"
+        self.adress_shcool = "Нет информации"
+
+    def get_list(self):
+        return self.students
+
+    def get_count_students(self):
+        return len(self.students)
 
     def load(self):
-        shcool = self.file_manager.file_read_json(self.path_file)
-        if not shcool is None:
-            self.shcool = shcool
-        else:
-            self.shcool = Shcool_data()
+        self.shcool = self.file_manager.file_read_json(self.path_file)
+        if not self.shcool is None:
+            self.name_shcool = self.shcool.name_shcool
+            self.adress_shcool = self.shcool.adress_shcool
+            self.students = self.shcool.students
 
-    def start(self):
+    def menu_start(self):
         """Точка входа в меню программы"""
         while True:
             print('-------    Главное меню    ---------')
@@ -56,24 +69,24 @@ class Shcool_Manager:
                 self.menu_shcool()
             elif menu_num == "2":
                 self.menu_students()
-            elif menu_num == "99":
-                self.add_student()
-                self.save()
-            elif menu_num == "9":
-                self.show_info()
+            # elif menu_num == "99":
+            #     self.add_student()
+            #     self.save()
+            # elif menu_num == "9":
+            #     self.show_info()
             elif menu_num == "0":
                 break
             print('Выберите нужный пункт меню')
 
-
     def menu_shcool(self):
         while True:
-            print('------         ШКОЛА        --------')
+            self.show_info()
+            print('---------      ШКОЛA     -----------')
             print('------------------------------------')
             print('-          НОМЕР ШКОЛЫ             -')
             print('-           нажмите "1"            -')
-            print('-          АДРЕСС ШКОЛЫ            -')
-            print('-           нажмите "2"            -')
+            # print('-          АДРЕСС ШКОЛЫ            -')
+            # print('-           нажмите "2"            -')
             print('-=   главное меню нажмите "0"     =-')
             print('------------------------------------')
 
@@ -81,12 +94,11 @@ class Shcool_Manager:
             menu_num = input()
             if menu_num == "1":
                 self.add_name_shcool()
-            elif menu_num == "2":
-                self.add_adress_shcool()
+                self.save()
             elif menu_num == "0":
-                self.menu_shcool()
+                # self.start()
+                break
             print('Выберите нужный пункт меню')
-
 
     def menu_students(self):
         """Внесение изменений в список студентов"""
@@ -107,75 +119,71 @@ class Shcool_Manager:
             if menu_num == "1":
                 self.print_list()
             elif menu_num == "2":
-                self.print_list()
+                # self.print_list()
                 self.add_student()
+                self.save()
             elif menu_num == "3":
+                self.print_list()
                 self.del_student()
+                self.save()
             elif menu_num == "0":
                 break
             print('Выберите нужный пункт меню')
 
     def add_name_shcool(self):
-        self.name_shcool = input('Номер школы: ')
-        self.print_info()
-        self.menu_shcool()
-
-    def add_adress_shcool(self):
-        self.Shcool_data().adress_shcool = input('Адрес школы: ')
-
+        self.name_shcool = valid_digit('Номер школы: ', 1, 5000)
+        # self.save()
+        self.adress_shcool = input('Адрес школы: ')
+        # self.save()
+        # self.menu_shcool()
 
     def save(self):
         """Сохраняет данные в файл"""
-        self.file_manager.file_write_json(self.path_file, self.shcool)
+        shcool_inf = Shcool(self.name_shcool, self.adress_shcool, self.students)
+        self.file_manager.file_write_json(self.path_file, shcool_inf)
 
     def show_info(self):
-        print(f'имя={self.shcool.name_shcool}  адрес={self.shcool.adress_shcool} '
-              f'всего уч= {self.shcool.get_count_students()}')
 
-        for i in range(len(self.shcool.students)):
-            print(i+1,
-                  self.shcool.students[i].first_name_student,
-                  self.shcool.students[i].last_name_student
-                  )
+        print(f'Школа = {self.name_shcool}  адрес = {self.adress_shcool} \n'
+              f'всего учеников = {self.get_count_students()}')
 
     def add_student(self):
         sh = self.shcool
-        first_name_student = input("введите имя ученика: ")
-        last_name_student = input("введите фамилию ученика: ")
-        age_student = input("введите возраст ученика: ")   # на дурака
-        number_class = input("введите класс ученика: ")  # на дурака
+        first_name_student = valid_symbol("введите имя ученика: ")
+        last_name_student = valid_symbol("введите фамилию ученика: ")
+        age_student = valid_digit("введите возраст ученика: ", 6, 19)  # на дурака
+        number_class = valid_digit("введите класс ученика: ", 1, 11)  # на дурака
         student = Student(first_name_student, last_name_student, age_student, number_class)
         sh.students.append(student)
-        print(sh.get_count_students())
 
-        for i in range(len(sh.students)):
-            print(i+1, sh.students[i].first_name_student, sh.students[i].last_name_student,
-                  sh.students[i].ag_student, sh.students[i].number_class)
+        # print(sh.get_count_students())
+        # print(len(sh.students))
 
-        sh.students.remove(sh.students[2]) # так удаляем
-
-        print(sh.get_count_students())
-
-        for i in range(len(sh.students)):
-            print(i, sh.students[i].student_id, sh.students[i].first_name_student)
-
-
-        print(sh.get_count_students())
-
-        for i in range(len(sh.students)):
-            print(i, sh.students[i].student_id, sh.students[i].first_name_student)
-        print(len(sh.students))
+        # for i in range(len(sh.students)):
+        #     print(i+1, sh.students[i].first_name_student, sh.students[i].last_name_student,
+        #           sh.students[i].age_student, sh.students[i].number_class)
+        #
+        # # sh.students.remove(sh.students[2])  # так удаляем
+        # print(len(sh.students))
+        #
+        # for i in range(len(sh.students)):
+        #     print(i, sh.students[i].student_id, sh.students[i].first_name_student)
 
     def del_student(self):
-
-        self.print_list()
-        id_stud = int_input('Выберите номер студента: ')
-
-        ind = id_stud-1
+        # self.print_list()
+        id_stud = valid_digit('Выберите номер ученика: ', 1, len(self.students) + 1)
+        ind = id_stud - 1
         self.students.remove(self.students[ind])
+
     def print_list(self):
-        for i in range(len(self.students)):
-            print(i+1, self.students[i].student_id, self.students[i].first_name_student)
+        if not len(self.students) == 0:
+            print(('________________________________________'))
+            for i in range(len(self.shcool.students)):
+                print(
+                    f'{i + 1:3} {self.students[i].first_name_student :8} {self.students[i].last_name_student:10}{self.students[i].age_student:5}{self.students[i].number_class:5}')
+        else:
+            print('Список студенов пуст')
+            print(('________________________________________'))
 
 
 class FileManager:
@@ -202,8 +210,6 @@ class FileManager:
         file.close()
 
     def file_write_json(self, file_name, obj):
-        # with open(file_name, "w") as write_file:
-        #     json.dump(obj, write_file)
         file = open(file_name, 'w', encoding='utf8')
         text = jsonpickle.encode(obj)
         file.write(text)
@@ -213,9 +219,6 @@ class FileManager:
         if not os.path.exists(file_name):
             return None
 
-        # with open(file_name, "r") as read_file:
-        #     obj = json.load(read_file)
-
         file = open(file_name, 'r', encoding='utf8')
         text = file.read()
         file.close()
@@ -223,10 +226,64 @@ class FileManager:
         return obj
 
 
+def valid_digit(str, min_d, max_d):
+    digit = ""
+    while not f'{digit}'.isdigit():
+        digit = input(str)
+        while not is_valid(digit):
+            digit = input(str)
+
+        digit = int(digit)
+        if not (min_d <= digit and digit <= max_d):
+            print(f'от {min_d} до {max_d}')
+            digit = ""
+        else:
+            # print("OK",digit)
+            return digit
+    return digit
+
+
+def is_valid(int_input):
+    if int_input.isdigit():
+        # n = int(int_input)
+        return True
+    print('Пожалуйста, введите число!')
+    return False
+
+
+def valid_symbol(str):
+    isff = False
+    while not isff:
+        isff = True
+        vs = input(str)
+        if not vs.istitle():
+            isff = False
+        if not vs.isalpha():
+
+            isff = False
+
+        # if isff == False:
+        #     print("Эти бла бла")
+        # else:
+        #     print("OK", vs)
+
+    # if (ss.istitle()):
+    #     print('ss.istitle')
+    # if (ss.isdigit()): print('ss.isdigit')
+    # if (ss.isupper()): print('ss.isupper')
+    # if (ss.isascii()): print('ss.isascii')
+    # if (ss.isidentifier()): print('ss.isidentifier')
+
+    # return input(str)
+    return vs
+
 
 if __name__ == '__main__':
+    # while True:
+    #     #     # valid_digit("тест ", 0, 10)
+    #     valid_symbol("str")
+
     main = Shcool_Manager()
     main.load()
-    main.start()
+    main.menu_start()
     main.save()
-
