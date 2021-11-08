@@ -131,11 +131,9 @@ class Shcool_Manager:
             print('Выберите нужный пункт меню')
 
     def add_name_shcool(self):
-        self.name_shcool = valid_digit('Номер школы: ', 1, 5000)
+        self.name_shcool = valid_digit('Номер школы (от 1 до 5000): ', 1, 5000)
         # self.save()
         self.adress_shcool = input('Адрес школы: ')
-        # self.save()
-        # self.menu_shcool()
 
     def save(self):
         """Сохраняет данные в файл"""
@@ -148,37 +146,25 @@ class Shcool_Manager:
               f'всего учеников = {self.get_count_students()}')
 
     def add_student(self):
-        sh = self.shcool
-        first_name_student = valid_symbol("введите имя ученика: ")
-        last_name_student = valid_symbol("введите фамилию ученика: ")
-        age_student = valid_digit("введите возраст ученика: ", 6, 19)  # на дурака
-        number_class = valid_digit("введите класс ученика: ", 1, 11)  # на дурака
+        first_name_student = valid_symbol("введите имя ученика с большой буквы: ")
+        last_name_student = valid_symbol("введите фамилию ученика с большой буквы: ")
+        age_student = valid_digit("введите возраст ученика (от 6 до 19): ", 6, 19)  # на дурака
+        number_class = valid_digit("введите класс ученика (от 1 до 11): ", 1, 11)  # на дурака
         student = Student(first_name_student, last_name_student, age_student, number_class)
-        sh.students.append(student)
-
-        # print(sh.get_count_students())
-        # print(len(sh.students))
-
-        # for i in range(len(sh.students)):
-        #     print(i+1, sh.students[i].first_name_student, sh.students[i].last_name_student,
-        #           sh.students[i].age_student, sh.students[i].number_class)
-        #
-        # # sh.students.remove(sh.students[2])  # так удаляем
-        # print(len(sh.students))
-        #
-        # for i in range(len(sh.students)):
-        #     print(i, sh.students[i].student_id, sh.students[i].first_name_student)
+        self.students.append(student)
 
     def del_student(self):
-        # self.print_list()
-        id_stud = valid_digit('Выберите номер ученика: ', 1, len(self.students) + 1)
+        if len(self.students) == 0:
+            print('Список пуст, удалять некого')
+            return
+        id_stud = valid_digit('Выберите номер ученика из списка: ', 1, len(self.students) + 1)
         ind = id_stud - 1
         self.students.remove(self.students[ind])
 
     def print_list(self):
         if not len(self.students) == 0:
             print(('________________________________________'))
-            for i in range(len(self.shcool.students)):
+            for i in range(len(self.students)):
                 print(
                     f'{i + 1:3} {self.students[i].first_name_student :8} {self.students[i].last_name_student:10}{self.students[i].age_student:5}{self.students[i].number_class:5}')
         else:
@@ -189,7 +175,6 @@ class Shcool_Manager:
 class FileManager:
     def __init__(self):
         pass
-        # self.file_nam = file_nam
 
     def file_write(self, file_name, text):
         file = open(file_name, 'w', encoding='utf8')
@@ -222,8 +207,13 @@ class FileManager:
         file = open(file_name, 'r', encoding='utf8')
         text = file.read()
         file.close()
-        obj = jsonpickle.decode(text)
-        return obj
+        try:
+            obj = jsonpickle.decode(text)
+            return obj
+
+        except:
+            return None
+
 
 
 def valid_digit(str, min_d, max_d):
@@ -238,14 +228,12 @@ def valid_digit(str, min_d, max_d):
             print(f'от {min_d} до {max_d}')
             digit = ""
         else:
-            # print("OK",digit)
             return digit
     return digit
 
 
 def is_valid(int_input):
     if int_input.isdigit():
-        # n = int(int_input)
         return True
     print('Пожалуйста, введите число!')
     return False
@@ -259,29 +247,11 @@ def valid_symbol(str):
         if not vs.istitle():
             isff = False
         if not vs.isalpha():
-
             isff = False
-
-        # if isff == False:
-        #     print("Эти бла бла")
-        # else:
-        #     print("OK", vs)
-
-    # if (ss.istitle()):
-    #     print('ss.istitle')
-    # if (ss.isdigit()): print('ss.isdigit')
-    # if (ss.isupper()): print('ss.isupper')
-    # if (ss.isascii()): print('ss.isascii')
-    # if (ss.isidentifier()): print('ss.isidentifier')
-
-    # return input(str)
     return vs
 
 
 if __name__ == '__main__':
-    # while True:
-    #     #     # valid_digit("тест ", 0, 10)
-    #     valid_symbol("str")
 
     main = Shcool_Manager()
     main.load()
